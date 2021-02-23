@@ -1,0 +1,412 @@
+第三天
+
+可变参数
+顾名思义，可变参数就是传入的参数个数是可变的，可以是 0, 1, 2 到任意个，是不定长的参数。
+def functionname(arg1, arg2=v, *args):
+       "函数_文档字符串"
+       function_suite
+       return [expression]
+*args - 可变参数，可以是从零个到任意个，自动组装成元组。
+加了星号（*）的变量名会存放所有未命名的变量参数。
+【例子】
+[5]:
+def printinfo(arg1, *args):
+    print(arg1)
+    for var in args:
+        print(var)
+​
+​
+printinfo(10)  # 10
+printinfo(70, 60, 50)
+# 70
+# 60
+# 50
+10
+70
+60
+50
+
+4. 关键字参数
+def functionname(arg1, arg2=v, args, *kw):
+       "函数_文档字符串"
+       function_suite
+       return [expression]
+**kw - 关键字参数，可以是从零个到任意个，自动组装成字典。
+【例子】
+[6]:
+def printinfo(arg1, *args, **kwargs):
+    print(arg1)
+    print(args)
+    print(kwargs)
+​
+​
+printinfo(70, 60, 50)
+# 70
+# (60, 50)
+# {}
+printinfo(70, 60, 50, a=1, b=2)
+# 70
+# (60, 50)
+# {'a': 1, 'b': 2}
+70
+(60, 50)
+{}
+70
+(60, 50)
+{'a': 1, 'b': 2}
+
+「可变参数」和「关键字参数」的同异总结如下：
+可变参数允许传入零个到任意个参数，它们在函数调用时自动组装为一个元组 (tuple)。
+关键字参数允许传入零个到任意个参数，它们在函数内部自动组装为一个字典 (dict)。
+
+参数组合
+在 Python 中定义函数，可以用位置参数、默认参数、可变参数、命名关键字参数和关键字参数，这 5 种参数中的 4 个都可以一起使用，但是注意，参数定义的顺序必须是：
+位置参数、默认参数、可变参数和关键字参数。
+位置参数、默认参数、命名关键字参数和关键字参数。
+要注意定义可变参数和关键字参数的语法：
+*args 是可变参数，args 接收的是一个 tuple
+**kw 是关键字参数，kw 接收的是一个 dict
+命名关键字参数是为了限制调用者可以传入的参数名，同时可以提供默认值。定义命名关键字参数不要忘了写分隔符 *，否则定义的是位置参数。
+警告：虽然可以组合多达 5 种参数，但不要同时使用太多的组合，否则函数很难懂。
+
+filter(function, iterable) 过滤序列，过滤掉不符合条件的元素，返回一个迭代器对象，如果要转换为列表，可以使用 list() 来转换。
+【例子】
+[26]:
+odd = lambda x: x % 2 == 1
+templist = filter(odd, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+print(list(templist))  # [1, 3, 5, 7, 9]
+[1, 3, 5, 7, 9]
+
+map(function, *iterables) 根据提供的函数对指定序列做映射。
+【例子】
+[27]:
+m1 = map(lambda x: x ** 2, [1, 2, 3, 4, 5])
+print(list(m1))  
+# [1, 4, 9, 16, 25]
+​
+m2 = map(lambda x, y: x + y, [1, 3, 5, 7, 9], [2, 4, 6, 8, 10])
+print(list(m2))  
+# [3, 7, 11, 15, 19]
+
+Python 的魔法方法
+据说，Python 的对象天生拥有一些神奇的方法，它们是面向对象的 Python 的一切...
+它们是可以给你的类增加魔力的特殊方法...
+如果你的对象实现了这些方法中的某一个，那么这个方法就会在特殊的情况下被 Python 所调用，而这一切都是自动发生的...
+类有一个名为__init__(self[, param1, param2...])的魔法方法，该方法在类实例化时会自动调用。
+【例子】
+[36]:
+​
+class Ball:
+    def __init__(self, name):
+        self.name = name
+​
+    def kick(self):
+        print("我叫%s,该死的，谁踢我..." % self.name)
+​
+​
+a = Ball("球A")
+b = Ball("球B")
+c = Ball("球C")
+a.kick()
+# 我叫球A,该死的，谁踢我...
+b.kick()
+# 我叫球B,该死的，谁踢我...
+怪不得觉得奇怪，这才是我平时用的方法
+
+# 创建类对象
+class Test(object):
+    class_attr = 100  # 类属性
+
+    def __init__(self):
+        self.sl_attr = 100  # 实例属性
+
+    def func(self):
+        print('类对象.类属性的值:', Test.class_attr)  # 调用类属性
+        print('self.类属性的值', self.class_attr)  # 相当于把类属性 变成实例属性
+        print('self.实例属性的值', self.sl_attr)  # 调用实例属性
+
+
+a = Test()
+a.func()
+
+# 类对象.类属性的值: 100
+# self.类属性的值 100
+# self.实例属性的值 100
+
+b = Test()
+b.func()
+
+# 类对象.类属性的值: 100
+# self.类属性的值 100
+# self.实例属性的值 100
+
+a.class_attr = 200
+a.sl_attr = 200
+a.func()
+
+# 类对象.类属性的值: 100
+# self.类属性的值 200
+# self.实例属性的值 200
+
+b.func()
+
+# 类对象.类属性的值: 100
+# self.类属性的值 100
+# self.实例属性的值 100
+
+Test.class_attr = 300
+a.func()
+
+# 类对象.类属性的值: 300
+# self.类属性的值 200
+# self.实例属性的值 200
+
+b.func()
+# 类对象.类属性的值: 300
+# self.类属性的值 300
+# self.实例属性的值 100
+
+这段最后b.func()  self没太懂
+
+Python 严格要求方法需要有实例才能被调用，这种限制其实就是 Python 所谓的绑定概念。
+Python 对象的数据属性通常存储在名为.__ dict__的字典中，我们可以直接访问__dict__，或利用 Python 的内置函数vars()获取.__ dict__。
+【例子】
+[58]:
+class CC:
+    def setXY(self, x, y):
+        self.x = x
+        self.y = y
+​
+    def printXY(self):
+        print(self.x, self.y)
+​
+​
+dd = CC()
+print(dd.__dict__)
+# {}
+​
+print(vars(dd))
+# {}
+​
+print(CC.__dict__)
+# {'__module__': '__main__', 'setXY': <function CC.setXY at 0x000000C3473DA048>, 'printXY': <function CC.printXY at 0x000000C3473C4F28>, '__dict__': <attribute '__dict__' of 'CC' objects>, '__weakref__': <attribute '__weakref__' of 'CC' objects>, '__doc__': None}
+​
+dd.setXY(4, 5)
+print(dd.__dict__)
+# {'x': 4, 'y': 5}
+​
+print(vars(CC))
+# {'__module__': '__main__', 'setXY': <function CC.setXY at 0x000000632CA9B048>, 'printXY': <function CC.printXY at 0x000000632CA83048>, '__dict__': <attribute '__dict__' of 'CC' objects>, '__weakref__': <attribute '__weakref__' of 'CC' objects>, '__doc__': None}
+​
+print(CC.__dict__)
+# {'__module__': '__main__', 'setXY': <function CC.setXY at 0x000000632CA9B048>, 'printXY': <function CC.printXY at 0x000000632CA83048>, '_
+
+hasattr(object, name)用于判断对象是否包含对应的属性。
+【例子】
+[61]:
+class Coordinate:
+    x = 10
+    y = -5
+    z = 0
+​
+​
+point1 = Coordinate()
+print(hasattr(point1, 'x'))  # True
+print(hasattr(point1, 'y'))  # True
+print(hasattr(point1, 'z'))  # True
+print(hasattr(point1, 'no'))  # False
+
+getattr(object, name[, default])用于返回一个对象属性值。
+【例子】
+[63]:
+class A(object):
+    bar = 1
+​
+​
+a = A()
+print(getattr(a, 'bar'))  # 1
+print(getattr(a, 'bar2', 3))  # 3
+print(getattr(a, 'bar2'))
+# AttributeError: 'A' object has no attribute 'bar2'
+
+__str__(self):
+当你打印一个对象的时候，触发__str__
+当你使用%s格式化的时候，触发__str__
+str强转数据类型的时候，触发__str__
+__repr__(self)：
+repr是str的备胎
+有__str__的时候执行__str__,没有实现__str__的时候，执行__repr__
+repr(obj)内置函数对应的结果是__repr__的返回值
+当你使用%r格式化的时候 触发__repr__
+【例子】
+[73]:
+class Cat:
+    """定义一个猫类"""
+​
+    def __init__(self, new_name, new_age):
+        """在创建完对象之后 会自动调用, 它完成对象的初始化的功能"""
+        self.name = new_name
+        self.age = new_age
+​
+    def __str__(self):
+        """返回一个对象的描述信息"""
+        return "名字是:%s , 年龄是:%d" % (self.name, self.age)
+        
+    def __repr__(self):
+        """返回一个对象的描述信息"""
+        return "Cat:(%s,%d)" % (self.name, self.age)
+​
+    def eat(self):
+        print("%s在吃鱼...." % self.name)
+​
+    def drink(self):
+        print("%s在喝可乐..." % self.name)
+​
+    def introduce(self):
+        print("名字是:%s, 年龄是:%d" % (self.name, self.age))
+​
+​
+# 创建了一个对象
+tom = Cat("汤姆", 30)
+print(tom)  # 名字是:汤姆 , 年龄是:30
+print(str(tom)) # 名字是:汤姆 , 年龄是:30
+print(repr(tom))  # Cat:(汤姆,30)
+tom.eat()  # 汤姆在吃鱼....
+tom.introduce()  # 名字是:汤姆, 年龄是:30
+
+__mul__(self, other)定义乘法的行为：*
+__truediv__(self, other)定义真除法的行为：/
+__floordiv__(self, other)定义整数除法的行为：//
+__mod__(self, other) 定义取模算法的行为：%
+__divmod__(self, other)定义当被 divmod() 调用时的行为
+divmod(a, b)把除数和余数运算结果结合起来，返回一个包含商和余数的元组(a // b, a % b)。
+【例子】
+[77]:
+print(divmod(7, 2))  # (3, 1)
+print(divmod(8, 2))  # (4, 0)
+(3, 1)
+(4, 0)
+
+属性访问
+__getattr__(self, name): 定义当用户试图获取一个不存在的属性时的行为。
+__getattribute__(self, name)：定义当该类的属性被访问时的行为（先调用该方法，查看是否存在该属性，若不存在，接着去调用__getattr__）。
+__setattr__(self, name, value)：定义当一个属性被设置时的行为。
+__delattr__(self, name)：定义当一个属性被删除时的行为。
+【例子】
+[79]:
+class C:
+    def __getattribute__(self, item):
+        print('__getattribute__')
+        return super().__getattribute__(item)
+​
+    def __getattr__(self, item):
+        print('__getattr__')
+​
+    def __setattr__(self, key, value):
+        print('__setattr__')
+        super().__setattr__(key, value)
+​
+    def __delattr__(self, item):
+        print('__delattr__')
+        super().__delattr__(item)
+​
+​
+c = C()
+c.x
+# __getattribute__
+# __getattr__
+​
+c.x = 1
+# __setattr__
+​
+del c.x
+# __delattr__
+
+__len__(self)定义当被len()调用时的行为（返回容器中元素的个数）。
+__getitem__(self, key)定义获取容器中元素的行为，相当于self[key]。
+__setitem__(self, key, value)定义设置容器中指定元素的行为，相当于self[key] = value。
+__delitem__(self, key)定义删除容器中指定元素的行为，相当于del self[key]。
+【例子】编写一个可改变的自定义列表，要求记录列表中每个元素被访问的次数。
+[82]:
+class CountList:
+    def __init__(self, *args):
+        self.values = [x for x in args]
+        self.count = {}.fromkeys(range(len(self.values)), 0)
+​
+    def __len__(self):
+        return len(self.values)
+​
+    def __getitem__(self, item):
+        self.count[item] += 1
+        return self.values[item]
+​
+    def __setitem__(self, key, value):
+        self.values[key] = value
+​
+    def __delitem__(self, key):
+        del self.values[key]
+        for i in range(0, len(self.values)):
+            if i >= key:
+                self.count[i] = self.count[i + 1]
+        self.count.pop(len(self.values))
+​
+​
+c1 = CountList(1, 3, 5, 7, 9)
+c2 = CountList(2, 4, 6, 8, 10)
+print(c1[1])  # 3
+print(c2[2])  # 6
+c2[2] = 12
+print(c1[1] + c2[2])  # 15
+print(c1.count)
+# {0: 0, 1: 2, 2: 0, 3: 0, 4: 0}
+print(c2.count)
+# {0: 0, 1: 0, 2: 2, 3: 0, 4: 0}
+del c1[1]
+print(c1.count)
+# {0: 0, 1: 0, 2: 0, 3: 0}
+
+迭代器有两个基本的方法：iter() 和 next()。
+iter(object) 函数用来生成迭代器。
+next(iterator[, default]) 返回迭代器的下一个项目。
+iterator -- 可迭代对象
+default -- 可选，用于设置在没有下一个元素时返回该默认值，如果不设置，又没有下一个元素则会触发 StopIteration 异常。
+【例子】
+[2]:
+links = {'B': '百度', 'A': '阿里', 'T': '腾讯'}
+​
+it = iter(links)
+while True:
+    try:
+        each = next(it)
+    except StopIteration:
+        break
+    print(each)
+​
+# B
+# A
+# T
+​
+it = iter(links)
+print(next(it))  # B
+print(next(it))  # A
+print(next(it))  # T
+print(next(it))  # StopIteration
+
+例子】用生成器实现斐波那契数列。
+[93]:
+def libs(n):
+    a = 0
+    b = 1
+    while True:
+        a, b = b, a + b
+        if a > n:
+            return
+        yield a
+​
+​
+for each in libs(100):
+    print(each, end=' ')
+​
+# 1 1 2 3 5 8 13 21 34 55 89
+
+这一部分比前两节明显要更难一些，明显是平时使用过程中不太熟练，要多看看
