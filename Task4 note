@@ -1,0 +1,64 @@
+一开始还以为是机器学习分类呢，原来只是数据清洗和可视化
+
+# 关联两个表数据
+ccl = pd.merge(ccl,candidates)
+# 提取出所需要的列
+ccl = pd.DataFrame(ccl, columns=[ 'CMTE_ID','CAND_ID', 'CAND_NAME','CAND_PTY_AFFILIATION'])
+
+merge表确实挺有意思的，kaggle的时候都是一个表
+
+
+#空值处理，统一填充 NOT PROVIDED
+c_itcont['STATE'].fillna('NOT PROVIDED',inplace=True)
+c_itcont['EMPLOYER'].fillna('NOT PROVIDED',inplace=True)
+c_itcont['OCCUPATION'].fillna('NOT PROVIDED',inplace=True)
+
+对于空值处理我觉得可以换方法（方便以后的机器学习）
+删除缺失值的列
+用一些数字来填补缺失的数值（平均数之类的）
+
+# 计算每个党派的所获得的捐款总额，然后排序，取前十位
+c_itcont.groupby("CAND_PTY_AFFILIATION").sum().sort_values("TRANSACTION_AMT",ascending=False).head(10)
+pytho+sql的感觉
+
+# 导入词云库
+from wordcloud import WordCloud,ImageColorGenerator
+词云库用的次数不多诶
+
+# 从所有数据中取出支持拜登的数据
+biden = c_itcont[c_itcont['CAND_NAME']=='BIDEN, JOSEPH R JR']
+# 统计各州对拜登的捐款总数
+biden_state = biden.groupby('STATE').sum().sort_values("TRANSACTION_AMT", ascending=False).head(10)
+# 饼图可视化各州捐款数据占比
+biden_state.plot.pie(figsize=(10, 10),autopct='%0.2f%%',subplots=True)
+
+饼图也用的不多
+
+# 在4.2 热门候选人拜登在各州的获得的捐赠占比 中我们已经取出了所有支持拜登的人的数据，存在变量：biden中
+# 将所有捐赠者姓名连接成一个字符串
+data = ' '.join(biden["NAME"].tolist())
+# 读取图片文件
+bg = plt.imread("biden.jpg")
+# 生成
+wc = WordCloud(# FFFAE3
+    background_color="white",  # 设置背景为白色，默认为黑色
+    width=890,  # 设置图片的宽度
+    height=600,  # 设置图片的高度
+    mask=bg,    # 画布
+    margin=10,  # 设置图片的边缘
+    max_font_size=100,  # 显示的最大的字体大小
+    random_state=20,  # 为每个单词返回一个PIL颜色
+).generate_from_text(data)
+# 图片背景
+bg_color = ImageColorGenerator(bg)
+# 开始画图
+plt.imshow(wc.recolor(color_func=bg_color))
+# 为云图去掉坐标轴
+plt.axis("off")
+# 画云图，显示
+# 保存云图
+wc.to_file("biden_wordcloud.png")
+
+词云图还是挺有意思的
+图片处理computer version那门课学过，应该还挺简单的
+
